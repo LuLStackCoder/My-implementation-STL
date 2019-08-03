@@ -1,64 +1,77 @@
 #ifndef STACK_HPP
 #define STACK_HPP
 
-#include <iostream>
 #include <stdexcept>
 
 namespace lib {
+
+// INTERFACE
 template <typename T>
 class Node {
-    public:
-        Node(T data, Node* ptr);
-        T item;
-        Node* next;
+public:
+    Node(T data, Node* ptr);
+    T item;
+    Node* next;
 };
 
-template<typename T>
+template <typename T>
 class Stack {
-    public:
-        Stack();
-        void push(T value);
-        T pop();
-        size_t size();
-        T& top();
-        bool empty();
-        void swap(Stack& other);
-    private:
-        size_t stack_size;
-        Node<T>* head;
+public:
+    Stack();
+    ~Stack();
+    void push(T data);
+    T pop();
+    size_t size();
+    T& top();
+    bool empty();
+    void reverse();
+    void swap(Stack& other);
+    Stack<T>& operator=(Stack<T>& other);
+
+private:
+    size_t stack_size;
+    Node<T>* head;
 };
 
+}  // namespace lib
 // CONSTRUCTORS
 
 template <typename T>
-Node<T>::Node(T data, Node<T>* ptr) {
+lib::Node<T>::Node(T data, Node<T>* ptr) {
     item = data;
     next = ptr;
 }
 
 template <typename T>
-Stack<T>::Stack() {
+lib::Stack<T>::Stack() {
     stack_size = 0;
     head = nullptr;
+}
+
+// DESTRUCTOR
+template <typename T>
+lib::Stack<T>::~Stack() {
+    while (!empty()) {
+        pop();
+    }
 }
 
 // METHODS
 
 template <typename T>
-void Stack<T>::push(T data) {
+void lib::Stack<T>::push(T data) {
     head = new Node<T>(data, head);
-    if (!head)
-        return ;
+    if (!head) return;
     stack_size++;
 }
 
 template <typename T>
-size_t Stack<T>::size() {
+size_t lib::Stack<T>::size() {
     return stack_size;
 }
 
 template <typename T>
-bool Stack<T>::empty() {
+bool lib::Stack<T>::empty() {
     if (stack_size == 0 && head == nullptr) {
         return true;
     }
@@ -66,11 +79,11 @@ bool Stack<T>::empty() {
 }
 
 template <typename T>
-T Stack<T>::pop() {
+T lib::Stack<T>::pop() {
     if (empty()) {
         throw std::out_of_range("Pop from empty stack");
     }
-    Node<T> *temp = head->next;
+    Node<T>* temp = head->next;
     T popped_data = head->item;
     delete (head);
     head = temp;
@@ -79,7 +92,7 @@ T Stack<T>::pop() {
 }
 
 template <typename T>
-T& Stack<T>::top() {
+T& lib::Stack<T>::top() {
     if (empty()) {
         throw std::out_of_range("Return reference to the top element from empty stack");
     }
@@ -87,16 +100,51 @@ T& Stack<T>::top() {
 }
 
 template <typename T>
-void Stack<T>::swap(Stack<T>& other) {
-    Stack<T> temp;
+lib::Stack<T>& lib::Stack<T>::operator=(lib::Stack<T>& other) {
     while (!empty()) {
-        temp.push(pop());
+        pop();
     }
-    while (!other.empty()) {
-        push(other.pop());
+    for (Node<T>* temp = other.head; temp; temp = temp->next) {
+        push(temp->item);
     }
-    other = temp;
+    reverse();
+    return *this;
 }
+
+template <typename T>
+void lib::Stack<T>::reverse() {
+    Node<T>* curr = head;
+    Node<T>* next = nullptr;
+    Node<T>* prev = nullptr;
+    while (curr) {
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+    }
+    head = prev;
+}
+
+template <typename T>
+void lib::Stack<T>::swap(Stack<T>& other) {
+    if (empty() && other.empty()) {
+        return;
+    }
+    T temp1;
+    T temp2;
+    bool flag1 = 0;
+    bool flag2 = 0;
+    if (!empty()) {
+        temp1 = pop();
+        flag1 = 1;
+    }
+    if (!other.empty()) {
+        temp2 = other.pop();
+        flag2 = 1;
+    }
+    swap(other);
+    if (flag2 == 1) push(temp2);
+    if (flag1 == 1) other.push(temp1);
 }
 
 #endif
