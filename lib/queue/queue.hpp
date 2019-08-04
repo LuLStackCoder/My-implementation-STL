@@ -25,7 +25,11 @@ public:
     T& back();
     size_t size();
     bool empty();
-    // void swap(Queue<T>& other);
+    void swap(Queue<T>& other);
+    Queue<T>& operator=(Queue<T>& other);
+    template <typename U>
+    friend std::ostream& operator<<(std::ostream& out, Queue<U>& queue);
+    void reverse();
 
 public:
     Node<T>* head;
@@ -63,12 +67,11 @@ lib::Queue<T>::~Queue() {
 
 template <typename T>
 void lib::Queue<T>::push(T data) {
-    Node<T> *temp = new Node<T>(data, nullptr);
+    Node<T>* temp = new Node<T>(data, nullptr);
     if (empty()) {
         tail = temp;
         head = tail;
-    }
-    else {
+    } else {
         tail->next = temp;
         tail = temp;
     }
@@ -89,14 +92,42 @@ T lib::Queue<T>::pop() {
 }
 
 template <typename T>
+lib::Queue<T>& lib::Queue<T>::operator=(Queue<T>& other) {
+    while (!empty()) {
+        pop();
+    }
+    for (Node<T>* temp = other.head; temp; temp = temp->next) {
+        push(temp->item);
+    }
+    return *this;
+}
+
+namespace lib {
+template <typename T>
+std::ostream& operator<<(std::ostream& out, lib::Queue<T>& queue) {
+    out << "[";
+    for (lib::Node<T>* temp = queue.head; temp; temp = temp->next) {
+        out << temp->item;
+        if (temp->next) {
+            out << ", ";
+        }
+    }
+    out << "]";
+    return out;
+}
+}  // namespace for friend function
+
+template <typename T>
 size_t lib::Queue<T>::size() {
     return queue_size;
 }
 
 template <typename T>
 bool lib::Queue<T>::empty() {
-    if (!queue_size && !head) return true;
-    else return false;
+    if (!queue_size && !head)
+        return true;
+    else
+        return false;
 }
 
 template <typename T>
@@ -109,10 +140,42 @@ T& lib::Queue<T>::front() {
 
 template <typename T>
 T& lib::Queue<T>::back() {
-        if (empty()) {
+    if (empty()) {
         throw std::out_of_range("Access to the back element of empty queue");
     }
     return tail->item;
 }
+
+template <typename T>
+void lib::Queue<T>::swap(Queue<T>& other) {
+    size_t counter = size();
+    while (!other.empty()) {
+        push(other.pop());
+    }
+    while (counter) {
+        other.push(pop());
+        counter--;
+    }
+}
+
+template <typename T>
+void lib::Queue<T>::reverse() {
+    Node<T>* curr = head;
+    tail = head;
+    Node<T>* next = nullptr;
+    Node<T>* prev = nullptr;
+    while (curr) {
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+    }
+    head = prev;
+}
+
+// template <typename T>
+// std::ostream& operator<<(std::ostream& out, lib::Queue<T>& queue) {
+
+// }
 
 #endif

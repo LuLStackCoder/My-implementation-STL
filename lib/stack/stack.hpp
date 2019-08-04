@@ -27,6 +27,8 @@ public:
     void reverse();
     void swap(Stack& other);
     Stack<T>& operator=(Stack<T>& other);
+    template <typename U>
+    friend std::ostream& operator<<(std::ostream& out, Stack<U>& queue);
 
 private:
     size_t stack_size;
@@ -72,8 +74,10 @@ size_t lib::Stack<T>::size() {
 
 template <typename T>
 bool lib::Stack<T>::empty() {
-    if (!stack_size && !head) return true;
-    else return false;
+    if (!stack_size && !head)
+        return true;
+    else
+        return false;
 }
 
 template <typename T>
@@ -108,6 +112,21 @@ lib::Stack<T>& lib::Stack<T>::operator=(lib::Stack<T>& other) {
     reverse();
     return *this;
 }
+
+namespace lib {
+template <typename T>
+std::ostream& operator<<(std::ostream& out, lib::Stack<T>& stack) {
+    out << "[";
+    for (lib::Node<T>* temp = stack.head; temp; temp = temp->next) {
+        out << temp->item;
+        if (temp->next) {
+            out << ", ";
+        }
+    }
+    out << "]";
+    return out;
+}
+}  // namespace for friend function
 
 template <typename T>
 void lib::Stack<T>::reverse() {

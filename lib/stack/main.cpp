@@ -17,19 +17,19 @@ int main(void) {
     st1.push(7);
     st1.push(7);
     st1.push(7);
-    std::cout << st.size() << std::endl;
-    std::cout << st1.size() << std::endl;
+    std::cout << st << std::endl;
+    std::cout << st1 << std::endl;
     // std::cout << st.top() << std::endl;
     // std::cout << st1.top() << std::endl;
     st.reverse();
     st.swap(st1);
-    st = st1;
+    // st = st1;
+    std::cout << st << std::endl;
+    std::cout << st1 << std::endl;
     // st.pop();
     // st.pop();
     // st.pop();
     // st1.pop();
-    std::cout << st.size() << std::endl;
-    std::cout << st1.size() << std::endl;
     // while (!st.empty())
     // {
     //     std::cout << st.top() << std::endl;
