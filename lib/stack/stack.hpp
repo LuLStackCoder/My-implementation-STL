@@ -72,10 +72,8 @@ size_t lib::Stack<T>::size() {
 
 template <typename T>
 bool lib::Stack<T>::empty() {
-    if (stack_size == 0 && head == nullptr) {
-        return true;
-    }
-    return false;
+    if (!stack_size && !head) return true;
+    else return false;
 }
 
 template <typename T>
@@ -84,17 +82,17 @@ T lib::Stack<T>::pop() {
         throw std::out_of_range("Pop from empty stack");
     }
     Node<T>* temp = head->next;
-    T popped_data = head->item;
-    delete (head);
+    T popped_item = head->item;
+    delete head;
     head = temp;
     stack_size--;
-    return popped_data;
+    return popped_item;
 }
 
 template <typename T>
 T& lib::Stack<T>::top() {
     if (empty()) {
-        throw std::out_of_range("Return reference to the top element from empty stack");
+        throw std::out_of_range("Access to the top element of empty stack");
     }
     return head->item;
 }
