@@ -63,7 +63,6 @@ lib::Stack<T>::~Stack() {
 template <typename T>
 void lib::Stack<T>::push(T data) {
     head = new Node<T>(data, head);
-    if (!head) return;
     stack_size++;
 }
 
@@ -74,10 +73,7 @@ size_t lib::Stack<T>::size() {
 
 template <typename T>
 bool lib::Stack<T>::empty() {
-    if (!stack_size && !head)
-        return true;
-    else
-        return false;
+    return !stack_size;
 }
 
 template <typename T>

@@ -31,7 +31,7 @@ public:
     friend std::ostream& operator<<(std::ostream& out, Queue<U>& queue);
     void reverse();
 
-public:
+private:
     Node<T>* head;
     Node<T>* tail;
     size_t queue_size;
@@ -84,9 +84,10 @@ T lib::Queue<T>::pop() {
         throw std::out_of_range("Pop from empty queue");
     }
     T popped_item = head->item;
-    Node<T>* temp = head->next;
-    delete head;
-    head = temp;
+    Node<T>* temp = head;
+    head = head->next;
+    delete temp;
+    temp = nullptr; 
     queue_size--;
     return popped_item;
 }
@@ -124,10 +125,7 @@ size_t lib::Queue<T>::size() {
 
 template <typename T>
 bool lib::Queue<T>::empty() {
-    if (!queue_size && !head)
-        return true;
-    else
-        return false;
+    return !queue_size;
 }
 
 template <typename T>
@@ -172,10 +170,5 @@ void lib::Queue<T>::reverse() {
     }
     head = prev;
 }
-
-// template <typename T>
-// std::ostream& operator<<(std::ostream& out, lib::Queue<T>& queue) {
-
-// }
 
 #endif
