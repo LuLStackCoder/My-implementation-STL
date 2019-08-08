@@ -7,6 +7,13 @@ int main(void) {
     q.push(1);
     q.push(2);
     q.push(3);
+    std::cout << q << std::endl;
+    q.pop();
+    std::cout << q << std::endl;
+    q.pop();
+    std::cout << q << std::endl;
+    q.pop();
+    std::cout << q << std::endl;
     // q.pop();
     // q.pop();
     // q.pop();

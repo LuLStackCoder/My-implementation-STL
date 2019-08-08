@@ -137,7 +137,6 @@ T lib::Deque<T>::pop_back() {
         Node<T>* temp = tail;
         tail = tail->prev;
         delete temp;
-        temp = nullptr;
         tail->next = nullptr;
     }
     deque_size--;

@@ -87,7 +87,6 @@ T lib::Queue<T>::pop() {
     Node<T>* temp = head;
     head = head->next;
     delete temp;
-    temp = nullptr; 
     queue_size--;
     return popped_item;
 }
